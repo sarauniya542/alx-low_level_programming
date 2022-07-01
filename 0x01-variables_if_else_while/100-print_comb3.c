@@ -1,38 +1,33 @@
 #include <stdio.h>
+
 /**
- * main - entry point
- * Description: random number in n +ve/-ve
- * Return: 0 on success
- */
+  * main - Prints combination of numbers
+  *
+  * Return: Always (Success)
+  */
 int main(void)
 {
-int n, k = 0, m;
+	int c, i;
 
-for (n = 0; n < 9; n++)
-{
-for (m = k ; m <= 9; m++)
-{
-if (n != m)
-{
-putchar(n);
-putchar(m);
-}
-if (n == m)
-{
-continue;
-}
-if (n == '8' && m == '9')
-{
-break;
-}
-else
-{
-putchar(',');
-putchar(' ');
-}
-}
-k++;
-}
-putchar('\n');
-return (0);
+	for (c = '0'; c <= '9'; c++)
+	{
+		for (i = '0'; i <= '9'; i++)
+		{
+			if (c < i)
+			{
+				putchar(c);
+				putchar(i);
+
+				if (c != '8' || (c == '8' && i != '9'))
+				{
+					putchar(',');
+					putchar(' ');
+				}
+			}
+		}
+	}
+
+	putchar('\n');
+
+	return (0);
 }
