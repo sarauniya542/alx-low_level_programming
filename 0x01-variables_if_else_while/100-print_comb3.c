@@ -1,41 +1,38 @@
 #include <stdio.h>
 /**
- * main - Entry point
- *
- * Return: Always 0 (Success/completed)
+ * main - entry point
+ * Description: random number in n +ve/-ve
+ * Return: 0 on success
  */
 int main(void)
-
 {
-	int number_left;
-	int number_right;
+	int n, k = 0, m;
 
-
-	for (number_left = 48; number_right <= 78; number_left++)
+	for (n = 0; n < 9; n++)
 	{
-		for (number_right = number_left + 1 ; number_right <= 78; number_right++)
+		for (m = k ; m <= 9; m++)
 		{
-
-			putchar(number_left);
-			putchar (number_right);
-
-
-			if ((number_left == 56) && (number_right == 78))
+			if (n != m)
+			{
+				putchar(n);
+				putchar(m);
+			}
+			if (n == m)
+			{
+				continue;
+			}
+			if (n == '8' && m == '9')
 			{
 				break;
 			}
-
-			putchar(',');
-			putchar (' ');
-
+			else
+			{
+				putchar(',');
+				putchar(' ');
+			}
 		}
-
+		k++;
 	}
-
 	putchar('\n');
-
-
 	return (0);
-
-
 }
