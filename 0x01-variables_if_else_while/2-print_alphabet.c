@@ -1,18 +1,16 @@
 #include <stdio.h>
-#include <unistd.h>
 /**
- * main - Entry point
- * Description: prints the alphabet in lowercase\n
- * Return: Always 0 (success)
- * /
+ *main - entry point
+ *Description: random number in n +ve/-ve
+ *Return: 0 on success
+ */
 int main(void)
 {
-int ch;
-
-for (ch = 'a'; ch <= 'z'; ch++)
+int firstLetter, n;
+for (firstLetter = 97, n = 1; n < 27; firstLetter++, n++)
 {
-putchar(ch);
+putchar(firstLetter);
 }
-putchar('\n');
+putchar(10);
 return (0);
 }
