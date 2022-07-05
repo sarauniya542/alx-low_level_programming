@@ -3,7 +3,7 @@
  * print_sign - prints the sign of a number
  *
  * @n:input
- *
+ * 
  * Description:prints sign
  *
  * Return: 1 - positive, 0 - zero, -1 - negative
@@ -23,7 +23,7 @@ else if (n == 0)
 x = 0;
 _putchar('0');
 }
-else if  
+else if (n < 0)
 {
 x = -1;
 _putchar('-');
