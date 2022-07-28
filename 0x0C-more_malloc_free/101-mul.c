@@ -1,158 +1,182 @@
 #include "main.h"
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
+
+void populateResult(char *dest, char *n1, int n1_len, char *n2, int n2_len);
+int getLengthOfNum(char *str);
+void print_result(char *src, int length);
 
 /**
- * main - program that multiplies two positive numbers
+ * main - entry point, multiplies two numbers
  *
- * @argc: argument count, must be 3
- * @argv: arguments, argv[1] and argv[2]
+ * @argc: integer, length of @argv
  *
- * Return: product of argv[1] by argv[2]
+ * @argv: one-dimensional array of strings, arguments of this program
+ *
+ * Return: 0, success
  */
 
 int main(int argc, char *argv[])
 {
-	char *num1, *num2;
-	int i, j, k, len1, len2, len, d1, d2, d1d2, carry, *mul;
+	int num1_length, num2_length;
+	char *result;
 
-	if (argc != 3 || !(_isnumber(argv[1])) || !(_isnumber(argv[2])))
-		_error(), exit(98);
-	num1 = argv[1], num2 = argv[2];
-	len1 = _strlen(num1), len2 = _strlen(num2), len = len1 + len2;
-	mul = _calloc(len, sizeof(int));
-	if (mul == NULL)
+	if (argc != 3)
+	{
+		printf("Error\n");
 		exit(98);
-	for (i = len1 - 1; i >= 0; i--)
-	{
-		d1 = num1[i] - '0';
-		carry = 0;
-		for (j = len2 - 1; j >= 0; j--)
-		{
-			d2 = num2[j] - '0';
-			d1d2 = d1 * d2;
-			mul[i + j + 1] += d1d2 % 10;
-			carry = d1d2 / 10;
-			if (mul[i + j + 1] > 9)
-			{
-				mul[i + j] += mul[i + j + 1] / 10;
-				mul[i + j + 1] = mul[i + j + 1] % 10;
-			}
-			mul[i + j] += carry;
-		}
 	}
-	for (k = 0; mul[k] == 0 && k < len; k++)
-		;
-	if (k == len)
-		_putchar(mul[len - 1] + '0');
-	else
+
+	num1_length = getLengthOfNum(argv[1]);
+
+	if (!num1_length)
 	{
-		for (i = k; i < len; i++)
-			_putchar(mul[i] + '0');
+		printf("Error\n");
+		exit(98);
 	}
-	_putchar('\n');
-	free(mul);
+
+	num2_length = getLengthOfNum(argv[2]);
+
+	if (!num2_length)
+	{
+		printf("Error\n");
+		exit(98);
+	}
+
+	result = malloc(num1_length + num2_length);
+
+	if (!result)
+		return (1);
+
+	populateResult(result, argv[1], num1_length, argv[2], num2_length);
+
+	print_result(result, num1_length + num2_length);
+	printf("\n");
+	free(result);
+
 	return (0);
 }
 
 /**
- * _isnumber - checks for digit-only (0 through 9) numbers
+ * getLengthOfNum - length of numbers in a string
  *
- * @str: parameter hard-coded in main
+ * @str: pointer to string of numbers
  *
- * Return: 1 or 0
+ * Return: integer (SUCCESS) or
+ * NULL, if string includes char
  */
 
-int _isnumber(char *str)
-{
-	int i;
-
-	for (i = 0; str[i] != '\0'; i++)
-	{
-		if (str[i] < '0' || str[i] > '9')
-			return (0);
-	}
-	return (1);
-}
-
-/**
- * _error - print error
- * Return: void
- */
-
-void _error(void)
-{
-	int i;
-	char error[] = "Error";
-
-	for (i = 0; i < 5; i++)
-		_putchar(error[i]);
-	_putchar('\n');
-}
-
-/**
- * _strlen - function that returns the length of a string
- *
- * @s: parameter defined in main
- *
- * Return: length of string
- */
-
-int _strlen(char *s)
+int getLengthOfNum(char *str)
 {
 	int i = 0;
 
-	while (*s != '\0')
+	while (str[i])
 	{
-		i++;
-		s++;
+		if (str[i] >= '0' && str[i] <= '9')
+			i++;
+		else
+			return ('\0');
+
 	}
+
 	return (i);
 }
 
 /**
- * _calloc - function that allocates memory for an array, using malloc
- * @nmemb: size of the memory space to allocate in bytes
- * @size: size of type
- * Return: void pointer
+ * populateResult - multiplies two numbers stored as string
+ * and stores result in @dest
+ *
+ * @dest: pointer to where @num1 * @num2 should be stored
+ *
+ * @n1: positive number stored as string in an array
+ *
+ * @n2: positive number stored as string in an array
+ *
+ * @n1_len: length of @n1
+ *
+ * @n2_len: length of @n2
  */
 
-void *_calloc(unsigned int nmemb, unsigned int size)
+void populateResult(char *dest, char *n1, int n1_len, char *n2, int n2_len)
 {
-	void *ptr;
+	int i, j, k, temp_value, non_carry_value;
+	int carry_value = 0;
+	char *multiplicand, *multiplier;
 
-	if (nmemb == 0 || size == 0)
-		return (NULL);
-
-	ptr = malloc(nmemb * size);
-	if (ptr == NULL)
+	if (n1_len > n2_len)
 	{
-		return (NULL);
+		i = n1_len - 1;
+		j = n2_len - 1;
+		multiplicand = n1;
+		multiplier = n2;
 	}
-	_memset(ptr, 0, size * nmemb);
-	return (ptr);
+	else
+	{
+		i = n2_len - 1;
+		j = n1_len - 1;
+		multiplicand = n2;
+		multiplier = n1;
+	}
+
+	while (i >= 0)
+	{
+		k = i;
+
+		while (k >= 0)
+		{
+			temp_value = ((multiplicand[k] - '0') * (multiplier[j] - '0'));
+			temp_value += carry_value;
+
+			if (j + 1 <= n2_len - 1 && dest[k + j + 1] >= '0' && dest[k + j + 1] <= '9')
+				temp_value += dest[k + j + 1] - '0';
+
+			if (temp_value < 10)
+			{
+				non_carry_value = temp_value;
+				carry_value = 0;
+			}
+			else
+			{
+				non_carry_value = temp_value % 10;
+				carry_value = temp_value / 10;
+			}
+
+			dest[k + j + 1] = non_carry_value + '0';
+			k--;
+		}
+
+		if (carry_value)
+			dest[k + j + 1] = carry_value + '0';
+
+		carry_value = 0;
+
+		if (j > 0)
+			j--;
+		else
+			i = -1;
+	}
+
+	free(dest);
+	free(multiplicand);
+	free(multiplier);
 }
 
 /**
- * _memset - function that fills memory with a constant byte
+ * print_result - prints numbers stored as string in a memory location
  *
- * @s: parameter defined in main, pointer to memory area
- * @b: parameter defined in main, constant byte
- * @n: parameter defined in main, number of bytes to be filled
+ * @src: pointer to memory that stores numbers as strings
  *
- * Return: memory address of function (memory area)
+ * @length: length of @src
  */
 
-char *_memset(char *s, char b, unsigned int n)
+void print_result(char *src, int length)
 {
-	unsigned int i;
-	char *tmp = s;
+	int i;
 
-	for (i = 0; i < n; i++)
+	for (i = 0; i < length; i++)
 	{
-		*s = b;
-		s++;
+		if (src[i] >= '0' && src[i] <= '9')
+		printf("%c", src[i]);
 	}
-	s = tmp;
-	return (s);
 }
+
